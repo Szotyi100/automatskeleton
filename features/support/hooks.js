@@ -2,8 +2,7 @@
 
 require('chromedriver');
 require('cucumber').Util.Colors(true);
-var chai = require('chai'),
-    chaiAsPromised = require('chai-as-promised');
+var chai = require('chai'), chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 global.expect = chai.expect;
 
@@ -12,23 +11,12 @@ global.by = webdriver.By;
 
 module.exports = function(){
     this.setDefaultTimeout(60000);
-    this.registerHandler('BeforeFeatures', function(){
-
+    this.registerHandler('BeforeFeatures', () => {
         global.driver = new webdriver.Builder().withCapabilities(webdriver.Capabilities.chrome()).build();
-        global.driver.isElementVisible = function(locator){
-            return driver.isElementPresent(locator).then(function (present) {
-                if (!present) {
-                    return false;
-                }
-                return driver.findElement(locator).isDisplayed().then(null, function () {
-                    return false;
-                });
-            });
-        };
         return global.driver.manage().window().maximize();
     });
+    
+    this.Before({tags: ['@phone']}, () => global.driver.manage().window().setSize(800, 640));
 
-    this.registerHandler('AfterFeatures', function(){
-        return global.driver.quit();
-    });
+    this.registerHandler('AfterFeatures', () =>  global.driver.quit());
 };
