@@ -10,7 +10,7 @@ chai.use(chaiAsPromised);
 global.expect = chai.expect;
 global.by = webdriver.By;
 
-module.exports = () => {
+module.exports = function(){
     this.setDefaultTimeout(60000);
     this.registerHandler('BeforeFeatures', () => {
         global.driver = new webdriver.Builder().withCapabilities(webdriver.Capabilities.chrome()).build();
